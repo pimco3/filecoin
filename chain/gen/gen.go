@@ -574,7 +574,7 @@ func (mca mca) ChainGetRandomnessFromTickets(ctx context.Context, tsk types.TipS
 		return nil, xerrors.Errorf("loading tipset key: %w", err)
 	}
 
-	return mca.sm.ChainStore().GetChainRandomness(ctx, pts.Cids(), personalization, randEpoch, entropy)
+	return mca.sm.ChainStore().GetChainRandomnessLookingBack(ctx, pts.Cids(), personalization, randEpoch, entropy)
 }
 
 func (mca mca) ChainGetRandomnessFromBeacon(ctx context.Context, tsk types.TipSetKey, personalization crypto.DomainSeparationTag, randEpoch abi.ChainEpoch, entropy []byte) (abi.Randomness, error) {
@@ -583,7 +583,7 @@ func (mca mca) ChainGetRandomnessFromBeacon(ctx context.Context, tsk types.TipSe
 		return nil, xerrors.Errorf("loading tipset key: %w", err)
 	}
 
-	return mca.sm.ChainStore().GetBeaconRandomness(ctx, pts.Cids(), personalization, randEpoch, entropy)
+	return mca.sm.ChainStore().GetBeaconRandomnessLookingBack(ctx, pts.Cids(), personalization, randEpoch, entropy)
 }
 
 func (mca mca) MinerGetBaseInfo(ctx context.Context, maddr address.Address, epoch abi.ChainEpoch, tsk types.TipSetKey) (*api.MiningBaseInfo, error) {
