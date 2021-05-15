@@ -142,11 +142,25 @@ func (ss *stateSnaps) deleteActor(addr address.Address) {
 
 // VersionForNetwork returns the state tree version for the given network
 // version.
-func VersionForNetwork(ver network.Version) types.StateTreeVersion {
-	if actors.VersionForNetwork(ver) == actors.Version0 {
-		return types.StateTreeVersion0
+func VersionForNetwork(ver network.Version) (types.StateTreeVersion, error) {
+	return VersionForActors(actors.VersionForNetwork(ver))
+}
+
+// VersionForActors returns the state tree version for the given actors
+// version.
+func VersionForActors(ver actors.Version) (types.StateTreeVersion, error) {
+	switch ver {
+	case actors.Version0:
+		return types.StateTreeVersion0, nil
+	case actors.Version2:
+		return types.StateTreeVersion1, nil
+	case actors.Version3:
+		return types.StateTreeVersion2, nil
+	case actors.Version4:
+		return types.StateTreeVersion3, nil
+	default:
+		return types.StateTreeVersion0, xerrors.Errorf("unknown actors version: %s", ver)
 	}
-	return types.StateTreeVersion1
 }
 
 func NewStateTree(cst cbor.IpldStore, ver types.StateTreeVersion) (*StateTree, error) {
