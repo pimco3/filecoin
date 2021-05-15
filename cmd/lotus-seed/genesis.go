@@ -9,6 +9,8 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/filecoin-project/lotus/chain/actors"
+
 	"github.com/filecoin-project/lotus/blockstore"
 	"github.com/filecoin-project/lotus/chain/vm"
 	"github.com/filecoin-project/lotus/extern/sector-storage/ffiwrapper"
@@ -39,6 +41,7 @@ var genesisCmd = &cli.Command{
 		genesisAddMsigsCmd,
 		genesisSetVRKCmd,
 		genesisSetRemainderCmd,
+		genesisSetActorVersionCmd,
 		genesisCarCmd,
 	},
 }
@@ -56,6 +59,7 @@ var genesisNewCmd = &cli.Command{
 			return xerrors.New("seed genesis new [genesis.json]")
 		}
 		out := genesis.Template{
+			ActorVersion:     actors.Version0,
 			Accounts:         []genesis.Actor{},
 			Miners:           []genesis.Miner{},
 			VerifregRootKey:  gen.DefaultVerifregRootkeyActor,
@@ -490,6 +494,53 @@ var genesisSetRemainderCmd = &cli.Command{
 		} else {
 			return xerrors.Errorf("must include either --account or --multisig flag")
 		}
+
+		b, err = json.MarshalIndent(&template, "", "  ")
+		if err != nil {
+			return err
+		}
+
+		if err := ioutil.WriteFile(genf, b, 0644); err != nil {
+			return err
+		}
+		return nil
+	},
+}
+
+var genesisSetActorVersionCmd = &cli.Command{
+	Name:      "set-actor-version",
+	Usage:     "Set the version of specs-actors that this network will start from",
+	ArgsUsage: "<genesisFile> <actorVersion>",
+	Action: func(cctx *cli.Context) error {
+		if cctx.Args().Len() != 2 {
+			return fmt.Errorf("must specify genesis file and actor version (e.g. '0'")
+		}
+
+		genf, err := homedir.Expand(cctx.Args().First())
+		if err != nil {
+			return err
+		}
+
+		var template genesis.Template
+		b, err := ioutil.ReadFile(genf)
+		if err != nil {
+			return xerrors.Errorf("read genesis template: %w", err)
+		}
+
+		if err := json.Unmarshal(b, &template); err != nil {
+			return xerrors.Errorf("unmarshal genesis template: %w", err)
+		}
+
+		av, err := strconv.ParseUint(cctx.Args().Get(1), 10, 64)
+		if err != nil {
+			return xerrors.Errorf("parsing actor version: %w", err)
+		}
+
+		if av < 0 || av == 1 || av > uint64(actors.LatestVersion) {
+			return xerrors.Errorf("invalid actor version: %d", av)
+		}
+
+		template.ActorVersion = actors.Version(av)
 
 		b, err = json.MarshalIndent(&template, "", "  ")
 		if err != nil {

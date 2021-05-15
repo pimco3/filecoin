@@ -3,6 +3,8 @@ package genesis
 import (
 	"encoding/json"
 
+	"github.com/filecoin-project/lotus/chain/actors"
+
 	"github.com/filecoin-project/go-address"
 	"github.com/filecoin-project/go-state-types/abi"
 	"github.com/ipfs/go-cid"
@@ -75,8 +77,9 @@ type Actor struct {
 }
 
 type Template struct {
-	Accounts []Actor
-	Miners   []Miner
+	ActorVersion actors.Version
+	Accounts     []Actor
+	Miners       []Miner
 
 	NetworkName string
 	Timestamp   uint64 `json:",omitempty"`

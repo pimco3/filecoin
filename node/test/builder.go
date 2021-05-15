@@ -277,6 +277,7 @@ func mockBuilderOpts(t *testing.T, fullOpts []test.FullNodeOpts, storage []test.
 		genms = append(genms, *genm)
 	}
 	templ := &genesis.Template{
+		ActorVersion:     actors.Version0,
 		Accounts:         genaccs,
 		Miners:           genms,
 		NetworkName:      "test",
@@ -440,6 +441,7 @@ func mockSbBuilderOpts(t *testing.T, fullOpts []test.FullNodeOpts, storage []tes
 		genms = append(genms, *genm)
 	}
 	templ := &genesis.Template{
+		ActorVersion:     actors.Version0,
 		Accounts:         genaccs,
 		Miners:           genms,
 		NetworkName:      "test",
