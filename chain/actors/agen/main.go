@@ -29,6 +29,7 @@ var actors = map[string][]int{
 	"multisig": lotusactors.Versions,
 	"paych":    lotusactors.Versions,
 	"power":    lotusactors.Versions,
+	"system":   lotusactors.Versions,
 	"reward":   lotusactors.Versions,
 	"verifreg": lotusactors.Versions,
 }
