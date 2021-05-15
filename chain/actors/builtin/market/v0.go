@@ -26,6 +26,12 @@ func load0(store adt.Store, root cid.Cid) (State, error) {
 	return &out, nil
 }
 
+func make0(store adt.Store) (State, error) {
+	out := state0{store: store}
+	out.State = market0.State{}
+	return &out, nil
+}
+
 type state0 struct {
 	market0.State
 	store adt.Store

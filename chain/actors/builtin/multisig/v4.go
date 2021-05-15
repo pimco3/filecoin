@@ -30,6 +30,12 @@ func load4(store adt.Store, root cid.Cid) (State, error) {
 	return &out, nil
 }
 
+func make4(store adt.Store) (State, error) {
+	out := state4{store: store}
+	out.State = msig4.State{}
+	return &out, nil
+}
+
 type state4 struct {
 	msig4.State
 	store adt.Store

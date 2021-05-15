@@ -29,6 +29,12 @@ func load{{.v}}(store adt.Store, root cid.Cid) (State, error) {
 	return &out, nil
 }
 
+func make{{.v}}(store adt.Store) (State, error) {
+	out := state{{.v}}{store: store}
+	out.State = init{{.v}}.State{}
+	return &out, nil
+}
+
 type state{{.v}} struct {
 	init{{.v}}.State
 	store adt.Store

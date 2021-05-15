@@ -1,12 +1,11 @@
-package account
+package cron
 
 import (
-	"github.com/filecoin-project/go-address"
 	"github.com/ipfs/go-cid"
 
 	"github.com/filecoin-project/lotus/chain/actors/adt"
 
-	account2 "github.com/filecoin-project/specs-actors/v2/actors/builtin/account"
+	cron2 "github.com/filecoin-project/specs-actors/v2/actors/builtin/cron"
 )
 
 var _ State = (*state2)(nil)
@@ -22,15 +21,11 @@ func load2(store adt.Store, root cid.Cid) (State, error) {
 
 func make2(store adt.Store) (State, error) {
 	out := state2{store: store}
-	out.State = account2.State{}
+	out.State = cron2.State{}
 	return &out, nil
 }
 
 type state2 struct {
-	account2.State
+	cron2.State
 	store adt.Store
-}
-
-func (s *state2) PubkeyAddress() (address.Address, error) {
-	return s.Address, nil
 }
