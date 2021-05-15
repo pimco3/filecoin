@@ -66,6 +66,26 @@ func Load(store adt.Store, act *types.Actor) (State, error) {
 	return nil, xerrors.Errorf("unknown actor code %s", act.Code)
 }
 
+func GetActorCodeID(av actors.Version) (cid.Cid, error) {
+	switch av {
+
+	case actors.Version0:
+		return builtin0.MultisigActorCodeID, nil
+
+	case actors.Version2:
+		return builtin2.MultisigActorCodeID, nil
+
+	case actors.Version3:
+		return builtin3.MultisigActorCodeID, nil
+
+	case actors.Version4:
+		return builtin4.MultisigActorCodeID, nil
+
+	}
+
+	return cid.Undef, xerrors.Errorf("unknown actor version %d", av)
+}
+
 type State interface {
 	cbor.Marshaler
 

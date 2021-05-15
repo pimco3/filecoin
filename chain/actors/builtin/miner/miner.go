@@ -3,6 +3,7 @@ package miner
 import (
 	"github.com/filecoin-project/go-state-types/big"
 	"github.com/filecoin-project/go-state-types/network"
+	"github.com/filecoin-project/lotus/chain/actors"
 	"github.com/ipfs/go-cid"
 	"github.com/libp2p/go-libp2p-core/peer"
 	cbg "github.com/whyrusleeping/cbor-gen"
@@ -84,6 +85,26 @@ func Load(store adt.Store, act *types.Actor) (State, error) {
 
 	}
 	return nil, xerrors.Errorf("unknown actor code %s", act.Code)
+}
+
+func GetActorCodeID(av actors.Version) (cid.Cid, error) {
+	switch av {
+
+	case actors.Version0:
+		return builtin0.StorageMinerActorCodeID, nil
+
+	case actors.Version2:
+		return builtin2.StorageMinerActorCodeID, nil
+
+	case actors.Version3:
+		return builtin3.StorageMinerActorCodeID, nil
+
+	case actors.Version4:
+		return builtin4.StorageMinerActorCodeID, nil
+
+	}
+
+	return cid.Undef, xerrors.Errorf("unknown actor version %d", av)
 }
 
 type State interface {

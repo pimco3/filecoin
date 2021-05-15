@@ -1,8 +1,24 @@
 package cron
 
 import (
-	builtin{{.latestVersion}} "github.com/filecoin-project/specs-actors{{import .latestVersion}}actors/builtin"
+	"github.com/filecoin-project/lotus/chain/actors"
+	"golang.org/x/xerrors"
+	"github.com/ipfs/go-cid"
+{{range .versions}}
+	builtin{{.}} "github.com/filecoin-project/specs-actors{{import .}}actors/builtin"
+{{end}}
 )
+
+func GetActorCodeID(av actors.Version) (cid.Cid, error) {
+	switch av {
+{{range .versions}}
+	case actors.Version{{.}}:
+		return builtin{{.}}.CronActorCodeID, nil
+{{end}}
+    }
+
+	return cid.Undef, xerrors.Errorf("unknown actor version %d", av)
+}
 
 var (
 	Address = builtin{{.latestVersion}}.CronActorAddr

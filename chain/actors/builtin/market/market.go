@@ -20,6 +20,7 @@ import (
 
 	builtin4 "github.com/filecoin-project/specs-actors/v4/actors/builtin"
 
+	"github.com/filecoin-project/lotus/chain/actors"
 	"github.com/filecoin-project/lotus/chain/actors/adt"
 	"github.com/filecoin-project/lotus/chain/actors/builtin"
 	"github.com/filecoin-project/lotus/chain/types"
@@ -66,6 +67,26 @@ func Load(store adt.Store, act *types.Actor) (State, error) {
 
 	}
 	return nil, xerrors.Errorf("unknown actor code %s", act.Code)
+}
+
+func GetActorCodeID(av actors.Version) (cid.Cid, error) {
+	switch av {
+
+	case actors.Version0:
+		return builtin0.StorageMarketActorCodeID, nil
+
+	case actors.Version2:
+		return builtin2.StorageMarketActorCodeID, nil
+
+	case actors.Version3:
+		return builtin3.StorageMarketActorCodeID, nil
+
+	case actors.Version4:
+		return builtin4.StorageMarketActorCodeID, nil
+
+	}
+
+	return cid.Undef, xerrors.Errorf("unknown actor version %d", av)
 }
 
 type State interface {

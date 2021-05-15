@@ -42,6 +42,17 @@ func Load(store adt.Store, act *types.Actor) (State, error) {
 	return nil, xerrors.Errorf("unknown actor code %s", act.Code)
 }
 
+func GetActorCodeID(av actors.Version) (cid.Cid, error) {
+	switch av {
+{{range .versions}}
+	case actors.Version{{.}}:
+		return builtin{{.}}.PaymentChannelActorCodeID, nil
+{{end}}
+    }
+
+	return cid.Undef, xerrors.Errorf("unknown actor version %d", av)
+}
+
 // State is an abstract version of payment channel state that works across
 // versions
 type State interface {

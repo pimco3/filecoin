@@ -1,6 +1,7 @@
 package init
 
 import (
+	"github.com/filecoin-project/lotus/chain/actors"
 	"golang.org/x/xerrors"
 
 	"github.com/filecoin-project/go-address"
@@ -63,6 +64,26 @@ func Load(store adt.Store, act *types.Actor) (State, error) {
 
 	}
 	return nil, xerrors.Errorf("unknown actor code %s", act.Code)
+}
+
+func GetActorCodeID(av actors.Version) (cid.Cid, error) {
+	switch av {
+
+	case actors.Version0:
+		return builtin0.InitActorCodeID, nil
+
+	case actors.Version2:
+		return builtin2.InitActorCodeID, nil
+
+	case actors.Version3:
+		return builtin3.InitActorCodeID, nil
+
+	case actors.Version4:
+		return builtin4.InitActorCodeID, nil
+
+	}
+
+	return cid.Undef, xerrors.Errorf("unknown actor version %d", av)
 }
 
 type State interface {
