@@ -8,31 +8,29 @@ import (
 	"path/filepath"
 	"text/template"
 
+	lotusactors "github.com/filecoin-project/lotus/chain/actors"
+
 	"golang.org/x/xerrors"
 )
 
-var latestVersion = 4
-
-var versions = []int{0, 2, 3, latestVersion}
-
 var versionImports = map[int]string{
-	0:             "/",
-	2:             "/v2/",
-	3:             "/v3/",
-	latestVersion: "/v4/",
+	0:                         "/",
+	2:                         "/v2/",
+	3:                         "/v3/",
+	lotusactors.LatestVersion: "/v4/",
 }
 
 var actors = map[string][]int{
-	"account":  versions,
-	"cron":     versions,
-	"init":     versions,
-	"market":   versions,
-	"miner":    versions,
-	"multisig": versions,
-	"paych":    versions,
-	"power":    versions,
-	"reward":   versions,
-	"verifreg": versions,
+	"account":  lotusactors.Versions,
+	"cron":     lotusactors.Versions,
+	"init":     lotusactors.Versions,
+	"market":   lotusactors.Versions,
+	"miner":    lotusactors.Versions,
+	"multisig": lotusactors.Versions,
+	"paych":    lotusactors.Versions,
+	"power":    lotusactors.Versions,
+	"reward":   lotusactors.Versions,
+	"verifreg": lotusactors.Versions,
 }
 
 func main() {
@@ -78,7 +76,7 @@ func generateAdapters() error {
 
 			err = tpl.Execute(&b, map[string]interface{}{
 				"versions":      versions,
-				"latestVersion": latestVersion,
+				"latestVersion": lotusactors.LatestVersion,
 			})
 			if err != nil {
 				return err
@@ -103,7 +101,7 @@ func generateState(actDir string) error {
 		return xerrors.Errorf("loading state adapter template: %w", err)
 	}
 
-	for _, version := range versions {
+	for _, version := range lotusactors.Versions {
 		tpl := template.Must(template.New("").Funcs(template.FuncMap{}).Parse(string(af)))
 
 		var b bytes.Buffer
@@ -134,7 +132,7 @@ func generateMessages(actDir string) error {
 		return xerrors.Errorf("loading message adapter template: %w", err)
 	}
 
-	for _, version := range versions {
+	for _, version := range lotusactors.Versions {
 		tpl := template.Must(template.New("").Funcs(template.FuncMap{}).Parse(string(af)))
 
 		var b bytes.Buffer
@@ -172,8 +170,8 @@ func generatePolicy(policyPath string) error {
 	var b bytes.Buffer
 
 	err = tpl.Execute(&b, map[string]interface{}{
-		"versions":      versions,
-		"latestVersion": latestVersion,
+		"versions":      lotusactors.Versions,
+		"latestVersion": lotusactors.LatestVersion,
 	})
 	if err != nil {
 		return err
@@ -203,8 +201,8 @@ func generateBuiltin(builtinPath string) error {
 	var b bytes.Buffer
 
 	err = tpl.Execute(&b, map[string]interface{}{
-		"versions":      versions,
-		"latestVersion": latestVersion,
+		"versions":      lotusactors.Versions,
+		"latestVersion": lotusactors.LatestVersion,
 	})
 	if err != nil {
 		return err
