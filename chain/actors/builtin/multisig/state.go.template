@@ -101,3 +101,7 @@ func (s *state{{.v}}) decodeTransaction(val *cbg.Deferred) (Transaction, error) 
 	}
 	return tx, nil
 }
+
+func (s *state{{.v}}) GetState() interface{} {
+	return &s.State
+}

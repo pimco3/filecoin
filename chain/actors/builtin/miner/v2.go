@@ -448,3 +448,7 @@ func fromV2SectorPreCommitOnChainInfo(v2 miner2.SectorPreCommitOnChainInfo) Sect
 	}
 
 }
+
+func (s *state2) GetState() interface{} {
+	return &s.State
+}

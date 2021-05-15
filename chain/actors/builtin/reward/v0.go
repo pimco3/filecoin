@@ -89,3 +89,7 @@ func (s *state0) PreCommitDepositForPower(networkQAPower builtin.FilterEstimate,
 		},
 		sectorWeight), nil
 }
+
+func (s *state0) GetState() interface{} {
+	return &s.State
+}

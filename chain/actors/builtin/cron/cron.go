@@ -59,4 +59,6 @@ var (
 	Methods = builtin4.MethodsCron
 )
 
-type State interface{}
+type State interface {
+	GetState() interface{}
+}

@@ -114,4 +114,5 @@ type State interface {
 	VerifierDataCap(address.Address) (bool, abi.StoragePower, error)
 	ForEachVerifier(func(addr address.Address, dcap abi.StoragePower) error) error
 	ForEachClient(func(addr address.Address, dcap abi.StoragePower) error) error
+	GetState() interface{}
 }

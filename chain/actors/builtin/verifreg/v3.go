@@ -62,3 +62,7 @@ func (s *state3) verifiedClients() (adt.Map, error) {
 func (s *state3) verifiers() (adt.Map, error) {
 	return adt3.AsMap(s.store, s.Verifiers, builtin3.DefaultHamtBitwidth)
 }
+
+func (s *state3) GetState() interface{} {
+	return &s.State
+}

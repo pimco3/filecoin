@@ -83,6 +83,8 @@ type State interface {
 
 	// Iterate lane states
 	ForEachLaneState(cb func(idx uint64, dl LaneState) error) error
+
+    GetState() interface{}
 }
 
 // LaneState is an abstract copy of the state of a single lane

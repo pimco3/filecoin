@@ -61,3 +61,7 @@ func (s *state2) verifiedClients() (adt.Map, error) {
 func (s *state2) verifiers() (adt.Map, error) {
 	return adt2.AsMap(s.store, s.Verifiers)
 }
+
+func (s *state2) GetState() interface{} {
+	return &s.State
+}

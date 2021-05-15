@@ -62,3 +62,7 @@ func (s *state{{.v}}) verifiedClients() (adt.Map, error) {
 func (s *state{{.v}}) verifiers() (adt.Map, error) {
 	return adt{{.v}}.AsMap(s.store, s.Verifiers{{if (ge .v 3)}}, builtin{{.v}}.DefaultHamtBitwidth{{end}})
 }
+
+func (s *state{{.v}}) GetState() interface{} {
+	return &s.State
+}

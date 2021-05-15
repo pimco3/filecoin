@@ -123,4 +123,5 @@ type State interface {
 	SetNetworkName(name string) error
 
 	addressMap() (adt.Map, error)
+	GetState() interface{}
 }

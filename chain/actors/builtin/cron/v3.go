@@ -29,3 +29,7 @@ type state3 struct {
 	cron3.State
 	store adt.Store
 }
+
+func (s *state3) GetState() interface{} {
+	return &s.State
+}

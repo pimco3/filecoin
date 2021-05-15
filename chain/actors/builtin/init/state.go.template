@@ -93,3 +93,7 @@ func (s *state{{.v}}) Remove(addrs ...address.Address) (err error) {
 func (s *state{{.v}}) addressMap() (adt.Map, error) {
 	return adt{{.v}}.AsMap(s.store, s.AddressMap{{if (ge .v 3)}}, builtin{{.v}}.DefaultHamtBitwidth{{end}})
 }
+
+func (s *state{{.v}}) GetState() interface{} {
+	return &s.State
+}

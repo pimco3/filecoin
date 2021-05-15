@@ -89,3 +89,7 @@ func (s *state2) Remove(addrs ...address.Address) (err error) {
 func (s *state2) addressMap() (adt.Map, error) {
 	return adt2.AsMap(s.store, s.AddressMap)
 }
+
+func (s *state2) GetState() interface{} {
+	return &s.State
+}

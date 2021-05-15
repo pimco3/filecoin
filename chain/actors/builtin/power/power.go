@@ -113,6 +113,7 @@ type State interface {
 	TotalPower() (Claim, error)
 	TotalCommitted() (Claim, error)
 	TotalPowerSmoothed() (builtin.FilterEstimate, error)
+	GetState() interface{}
 
 	// MinerCounts returns the number of miners. Participating is the number
 	// with power above the minimum miner threshold.

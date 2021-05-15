@@ -80,6 +80,10 @@ func (s *state4) LaneCount() (uint64, error) {
 	return lsamt.Length(), nil
 }
 
+func (s *state4) GetState() interface{} {
+	return &s.State
+}
+
 // Iterate lane states
 func (s *state4) ForEachLaneState(cb func(idx uint64, dl LaneState) error) error {
 	// Get the lane state from the chain

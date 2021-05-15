@@ -77,6 +77,7 @@ type State interface {
 
 	InitialPledgeForPower(abi.StoragePower, abi.TokenAmount, *builtin.FilterEstimate, abi.TokenAmount) (abi.TokenAmount, error)
 	PreCommitDepositForPower(builtin.FilterEstimate, abi.StoragePower) (abi.TokenAmount, error)
+    GetState() interface{}
 }
 
 type AwardBlockRewardParams = reward0.AwardBlockRewardParams

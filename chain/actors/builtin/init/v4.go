@@ -91,3 +91,7 @@ func (s *state4) Remove(addrs ...address.Address) (err error) {
 func (s *state4) addressMap() (adt.Map, error) {
 	return adt4.AsMap(s.store, s.AddressMap, builtin4.DefaultHamtBitwidth)
 }
+
+func (s *state4) GetState() interface{} {
+	return &s.State
+}

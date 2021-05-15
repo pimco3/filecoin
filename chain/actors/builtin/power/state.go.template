@@ -149,6 +149,10 @@ func (s *state{{.v}}) decodeClaim(val *cbg.Deferred) (Claim, error) {
 	return fromV{{.v}}Claim(ci), nil
 }
 
+func (s *state{{.v}}) GetState() interface{} {
+	return &s.State
+}
+
 func fromV{{.v}}Claim(v{{.v}} power{{.v}}.Claim) Claim {
 	return Claim{
 		RawBytePower:    v{{.v}}.RawBytePower,

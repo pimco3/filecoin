@@ -34,3 +34,7 @@ type state3 struct {
 func (s *state3) PubkeyAddress() (address.Address, error) {
 	return s.Address, nil
 }
+
+func (s *state3) GetState() interface{} {
+	return &s.State
+}

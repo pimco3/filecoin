@@ -213,3 +213,7 @@ func (s *dealProposals{{.v}}) array() adt.Array {
 func fromV{{.v}}DealProposal(v{{.v}} market{{.v}}.DealProposal) DealProposal {
 	return (DealProposal)(v{{.v}})
 }
+
+func (s *state{{.v}}) GetState() interface{} {
+	return &s.State
+}

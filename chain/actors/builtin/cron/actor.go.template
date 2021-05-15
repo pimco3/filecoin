@@ -37,4 +37,6 @@ var (
 )
 
 
-type State interface {}
+type State interface {
+    GetState() interface{}
+}

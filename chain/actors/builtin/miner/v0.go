@@ -432,3 +432,7 @@ func fromV0SectorPreCommitOnChainInfo(v0 miner0.SectorPreCommitOnChainInfo) Sect
 	return (SectorPreCommitOnChainInfo)(v0)
 
 }
+
+func (s *state0) GetState() interface{} {
+	return &s.State
+}

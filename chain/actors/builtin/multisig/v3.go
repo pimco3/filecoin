@@ -100,3 +100,7 @@ func (s *state3) decodeTransaction(val *cbg.Deferred) (Transaction, error) {
 	}
 	return tx, nil
 }
+
+func (s *state3) GetState() interface{} {
+	return &s.State
+}

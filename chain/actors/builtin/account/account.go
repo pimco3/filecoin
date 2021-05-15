@@ -104,4 +104,5 @@ type State interface {
 	cbor.Marshaler
 
 	PubkeyAddress() (address.Address, error)
+	GetState() interface{}
 }

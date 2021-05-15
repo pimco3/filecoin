@@ -148,6 +148,10 @@ func (s *state3) decodeClaim(val *cbg.Deferred) (Claim, error) {
 	return fromV3Claim(ci), nil
 }
 
+func (s *state3) GetState() interface{} {
+	return &s.State
+}
+
 func fromV3Claim(v3 power3.Claim) Claim {
 	return Claim{
 		RawBytePower:    v3.RawBytePower,
