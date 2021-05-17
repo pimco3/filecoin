@@ -124,6 +124,12 @@ type State interface {
 	ForEachClaim(func(miner address.Address, claim Claim) error) error
 	ClaimsChanged(State) (bool, error)
 
+	// Testing or genesis setup only
+	SetTotalQualityAdjPower(abi.StoragePower) error
+	SetTotalRawBytePower(abi.StoragePower) error
+	SetThisEpochQualityAdjPower(abi.StoragePower) error
+	SetThisEpochRawBytePower(abi.StoragePower) error
+
 	// Diff helpers. Used by Diff* functions internally.
 	claims() (adt.Map, error)
 	decodeClaim(*cbg.Deferred) (Claim, error)

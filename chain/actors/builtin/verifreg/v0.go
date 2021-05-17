@@ -23,9 +23,16 @@ func load0(store adt.Store, root cid.Cid) (State, error) {
 	return &out, nil
 }
 
-func make0(store adt.Store) (State, error) {
+func make0(store adt.Store, rootKeyAddress address.Address) (State, error) {
 	out := state0{store: store}
-	out.State = verifreg0.State{}
+
+	em, err := adt0.MakeEmptyMap(store).Root()
+	if err != nil {
+		return nil, err
+	}
+
+	out.State = *verifreg0.ConstructState(em, rootKeyAddress)
+
 	return &out, nil
 }
 

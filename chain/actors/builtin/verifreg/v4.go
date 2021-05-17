@@ -24,9 +24,16 @@ func load4(store adt.Store, root cid.Cid) (State, error) {
 	return &out, nil
 }
 
-func make4(store adt.Store) (State, error) {
+func make4(store adt.Store, rootKeyAddress address.Address) (State, error) {
 	out := state4{store: store}
-	out.State = verifreg4.State{}
+
+	s, err := verifreg4.ConstructState(store, rootKeyAddress)
+	if err != nil {
+		return nil, err
+	}
+
+	out.State = *s
+
 	return &out, nil
 }
 

@@ -28,9 +28,22 @@ func load0(store adt.Store, root cid.Cid) (State, error) {
 	return &out, nil
 }
 
-func make0(store adt.Store) (State, error) {
+func make0(store adt.Store, signers []address.Address, threshold uint64, startEpoch abi.ChainEpoch, unlockDuration abi.ChainEpoch, initialBalance abi.TokenAmount) (State, error) {
 	out := state0{store: store}
 	out.State = msig0.State{}
+	out.State.Signers = signers
+	out.State.NumApprovalsThreshold = threshold
+	out.State.StartEpoch = startEpoch
+	out.State.UnlockDuration = unlockDuration
+	out.State.InitialBalance = initialBalance
+
+	em, err := adt0.MakeEmptyMap(store).Root()
+	if err != nil {
+		return nil, err
+	}
+
+	out.State.PendingTxns = em
+
 	return &out, nil
 }
 

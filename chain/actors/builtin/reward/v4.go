@@ -23,9 +23,9 @@ func load4(store adt.Store, root cid.Cid) (State, error) {
 	return &out, nil
 }
 
-func make4(store adt.Store) (State, error) {
+func make4(store adt.Store, currRealizedPower abi.StoragePower) (State, error) {
 	out := state4{store: store}
-	out.State = reward4.State{}
+	out.State = *reward4.ConstructState(currRealizedPower)
 	return &out, nil
 }
 

@@ -30,7 +30,14 @@ func load3(store adt.Store, root cid.Cid) (State, error) {
 
 func make3(store adt.Store) (State, error) {
 	out := state3{store: store}
-	out.State = power3.State{}
+
+	s, err := power3.ConstructState(store)
+	if err != nil {
+		return nil, err
+	}
+
+	out.State = *s
+
 	return &out, nil
 }
 
@@ -136,6 +143,30 @@ func (s *state3) ClaimsChanged(other State) (bool, error) {
 	return !s.State.Claims.Equals(other3.State.Claims), nil
 }
 
+func (s *state3) SetTotalQualityAdjPower(p abi.StoragePower) error {
+	s.State.TotalQualityAdjPower = p
+	return nil
+}
+
+func (s *state3) SetTotalRawBytePower(p abi.StoragePower) error {
+	s.State.TotalRawBytePower = p
+	return nil
+}
+
+func (s *state3) SetThisEpochQualityAdjPower(p abi.StoragePower) error {
+	s.State.ThisEpochQualityAdjPower = p
+	return nil
+}
+
+func (s *state3) SetThisEpochRawBytePower(p abi.StoragePower) error {
+	s.State.ThisEpochRawBytePower = p
+	return nil
+}
+
+func (s *state3) GetState() interface{} {
+	return &s.State
+}
+
 func (s *state3) claims() (adt.Map, error) {
 	return adt3.AsMap(s.store, s.Claims, builtin3.DefaultHamtBitwidth)
 }
@@ -146,10 +177,6 @@ func (s *state3) decodeClaim(val *cbg.Deferred) (Claim, error) {
 		return Claim{}, err
 	}
 	return fromV3Claim(ci), nil
-}
-
-func (s *state3) GetState() interface{} {
-	return &s.State
 }
 
 func fromV3Claim(v3 power3.Claim) Claim {

@@ -31,8 +31,28 @@ func load{{.v}}(store adt.Store, root cid.Cid) (State, error) {
 
 func make{{.v}}(store adt.Store) (State, error) {
 	out := state{{.v}}{store: store}
-	out.State = power{{.v}}.State{}
-	return &out, nil
+	{{if (le .v 2)}}
+        em, err := adt{{.v}}.MakeEmptyMap(store).Root()
+        if err != nil {
+            return nil, err
+        }
+
+        emm, err := adt{{.v}}.MakeEmptyMultimap(store).Root()
+        if err != nil {
+            return nil, err
+        }
+
+        out.State = *power{{.v}}.ConstructState(em, emm)
+    {{else}}
+    	s, err := power{{.v}}.ConstructState(store)
+    	if err != nil {
+    		return nil, err
+    	}
+
+    	out.State = *s
+    {{end}}
+
+    return &out, nil
 }
 
 type state{{.v}} struct {
@@ -137,6 +157,30 @@ func (s *state{{.v}}) ClaimsChanged(other State) (bool, error) {
 	return !s.State.Claims.Equals(other{{.v}}.State.Claims), nil
 }
 
+func (s *state{{.v}}) SetTotalQualityAdjPower(p abi.StoragePower) error {
+	s.State.TotalQualityAdjPower = p
+	return nil
+}
+
+func (s *state{{.v}}) SetTotalRawBytePower(p abi.StoragePower) error {
+	s.State.TotalRawBytePower = p
+	return nil
+}
+
+func (s *state{{.v}}) SetThisEpochQualityAdjPower(p abi.StoragePower) error {
+	s.State.ThisEpochQualityAdjPower = p
+	return nil
+}
+
+func (s *state{{.v}}) SetThisEpochRawBytePower(p abi.StoragePower) error {
+	s.State.ThisEpochRawBytePower = p
+	return nil
+}
+
+func (s *state{{.v}}) GetState() interface{} {
+	return &s.State
+}
+
 func (s *state{{.v}}) claims() (adt.Map, error) {
 	return adt{{.v}}.AsMap(s.store, s.Claims{{if (ge .v 3)}}, builtin{{.v}}.DefaultHamtBitwidth{{end}})
 }
@@ -147,10 +191,6 @@ func (s *state{{.v}}) decodeClaim(val *cbg.Deferred) (Claim, error) {
 		return Claim{}, err
 	}
 	return fromV{{.v}}Claim(ci), nil
-}
-
-func (s *state{{.v}}) GetState() interface{} {
-	return &s.State
 }
 
 func fromV{{.v}}Claim(v{{.v}} power{{.v}}.Claim) Claim {

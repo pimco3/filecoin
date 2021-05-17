@@ -9,7 +9,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/filecoin-project/lotus/chain/actors"
+	"github.com/filecoin-project/go-state-types/network"
 
 	"github.com/filecoin-project/lotus/blockstore"
 	"github.com/filecoin-project/lotus/chain/vm"
@@ -59,7 +59,7 @@ var genesisNewCmd = &cli.Command{
 			return xerrors.New("seed genesis new [genesis.json]")
 		}
 		out := genesis.Template{
-			ActorVersion:     actors.Version0,
+			NetworkVersion:   network.Version0,
 			Accounts:         []genesis.Actor{},
 			Miners:           []genesis.Miner{},
 			VerifregRootKey:  gen.DefaultVerifregRootkeyActor,
@@ -508,12 +508,12 @@ var genesisSetRemainderCmd = &cli.Command{
 }
 
 var genesisSetActorVersionCmd = &cli.Command{
-	Name:      "set-actor-version",
-	Usage:     "Set the version of specs-actors that this network will start from",
+	Name:      "set-network-version",
+	Usage:     "Set the version that this network will start from",
 	ArgsUsage: "<genesisFile> <actorVersion>",
 	Action: func(cctx *cli.Context) error {
 		if cctx.Args().Len() != 2 {
-			return fmt.Errorf("must specify genesis file and actor version (e.g. '0'")
+			return fmt.Errorf("must specify genesis file and network version (e.g. '0'")
 		}
 
 		genf, err := homedir.Expand(cctx.Args().First())
@@ -531,16 +531,16 @@ var genesisSetActorVersionCmd = &cli.Command{
 			return xerrors.Errorf("unmarshal genesis template: %w", err)
 		}
 
-		av, err := strconv.ParseUint(cctx.Args().Get(1), 10, 64)
+		nv, err := strconv.ParseUint(cctx.Args().Get(1), 10, 64)
 		if err != nil {
-			return xerrors.Errorf("parsing actor version: %w", err)
+			return xerrors.Errorf("parsing network version: %w", err)
 		}
 
-		if av < 0 || av == 1 || av > uint64(actors.LatestVersion) {
-			return xerrors.Errorf("invalid actor version: %d", av)
+		if nv > uint64(build.NewestNetworkVersion) {
+			return xerrors.Errorf("invalid network version: %d", nv)
 		}
 
-		template.ActorVersion = actors.Version(av)
+		template.NetworkVersion = network.Version(nv)
 
 		b, err = json.MarshalIndent(&template, "", "  ")
 		if err != nil {

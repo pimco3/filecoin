@@ -11,6 +11,10 @@ import (
 {{end}}
 )
 
+var (
+	Address = builtin{{.latestVersion}}.SystemActorAddr
+)
+
 func MakeState(store adt.Store, av actors.Version) (State, error) {
 	switch av {
 {{range .versions}}

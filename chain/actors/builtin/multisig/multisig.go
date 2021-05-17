@@ -66,20 +66,20 @@ func Load(store adt.Store, act *types.Actor) (State, error) {
 	return nil, xerrors.Errorf("unknown actor code %s", act.Code)
 }
 
-func MakeState(store adt.Store, av actors.Version) (State, error) {
+func MakeState(store adt.Store, av actors.Version, signers []address.Address, threshold uint64, startEpoch abi.ChainEpoch, unlockDuration abi.ChainEpoch, initialBalance abi.TokenAmount) (State, error) {
 	switch av {
 
 	case actors.Version0:
-		return make0(store)
+		return make0(store, signers, threshold, startEpoch, unlockDuration, initialBalance)
 
 	case actors.Version2:
-		return make2(store)
+		return make2(store, signers, threshold, startEpoch, unlockDuration, initialBalance)
 
 	case actors.Version3:
-		return make3(store)
+		return make3(store, signers, threshold, startEpoch, unlockDuration, initialBalance)
 
 	case actors.Version4:
-		return make4(store)
+		return make4(store, signers, threshold, startEpoch, unlockDuration, initialBalance)
 
 	}
 	return nil, xerrors.Errorf("unknown actor version %d", av)

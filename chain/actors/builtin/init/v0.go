@@ -25,9 +25,16 @@ func load0(store adt.Store, root cid.Cid) (State, error) {
 	return &out, nil
 }
 
-func make0(store adt.Store) (State, error) {
+func make0(store adt.Store, networkName string) (State, error) {
 	out := state0{store: store}
-	out.State = init0.State{}
+
+	mr, err := adt0.MakeEmptyMap(store).Root()
+	if err != nil {
+		return nil, err
+	}
+
+	out.State = *init0.ConstructState(mr, networkName)
+
 	return &out, nil
 }
 
@@ -68,6 +75,11 @@ func (s *state0) SetNetworkName(name string) error {
 	return nil
 }
 
+func (s *state0) SetNextID(id abi.ActorID) error {
+	s.State.NextID = id
+	return nil
+}
+
 func (s *state0) Remove(addrs ...address.Address) (err error) {
 	m, err := adt0.AsMap(s.store, s.State.AddressMap)
 	if err != nil {
@@ -86,8 +98,13 @@ func (s *state0) Remove(addrs ...address.Address) (err error) {
 	return nil
 }
 
-func (s *state0) addressMap() (adt.Map, error) {
-	return adt0.AsMap(s.store, s.AddressMap)
+func (s *state0) SetAddressMap(mcid cid.Cid) error {
+	s.State.AddressMap = mcid
+	return nil
+}
+
+func (s *state0) AddressMap() (adt.Map, error) {
+	return adt0.AsMap(s.store, s.State.AddressMap)
 }
 
 func (s *state0) GetState() interface{} {

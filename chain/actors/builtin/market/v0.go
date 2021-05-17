@@ -28,7 +28,19 @@ func load0(store adt.Store, root cid.Cid) (State, error) {
 
 func make0(store adt.Store) (State, error) {
 	out := state0{store: store}
-	out.State = market0.State{}
+
+	ea, err := adt0.MakeEmptyArray(store).Root()
+	if err != nil {
+		return nil, err
+	}
+
+	em, err := adt0.MakeEmptyMap(store).Root()
+	if err != nil {
+		return nil, err
+	}
+
+	out.State = *market0.ConstructState(ea, em, em)
+
 	return &out, nil
 }
 

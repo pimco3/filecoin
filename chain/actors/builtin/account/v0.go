@@ -20,9 +20,9 @@ func load0(store adt.Store, root cid.Cid) (State, error) {
 	return &out, nil
 }
 
-func make0(store adt.Store) (State, error) {
+func make0(store adt.Store, addr address.Address) (State, error) {
 	out := state0{store: store}
-	out.State = account0.State{}
+	out.State = account0.State{Address: addr}
 	return &out, nil
 }
 

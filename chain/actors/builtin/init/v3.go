@@ -27,9 +27,16 @@ func load3(store adt.Store, root cid.Cid) (State, error) {
 	return &out, nil
 }
 
-func make3(store adt.Store) (State, error) {
+func make3(store adt.Store, networkName string) (State, error) {
 	out := state3{store: store}
-	out.State = init3.State{}
+
+	s, err := init3.ConstructState(store, networkName)
+	if err != nil {
+		return nil, err
+	}
+
+	out.State = *s
+
 	return &out, nil
 }
 
@@ -70,6 +77,11 @@ func (s *state3) SetNetworkName(name string) error {
 	return nil
 }
 
+func (s *state3) SetNextID(id abi.ActorID) error {
+	s.State.NextID = id
+	return nil
+}
+
 func (s *state3) Remove(addrs ...address.Address) (err error) {
 	m, err := adt3.AsMap(s.store, s.State.AddressMap, builtin3.DefaultHamtBitwidth)
 	if err != nil {
@@ -88,8 +100,13 @@ func (s *state3) Remove(addrs ...address.Address) (err error) {
 	return nil
 }
 
-func (s *state3) addressMap() (adt.Map, error) {
-	return adt3.AsMap(s.store, s.AddressMap, builtin3.DefaultHamtBitwidth)
+func (s *state3) SetAddressMap(mcid cid.Cid) error {
+	s.State.AddressMap = mcid
+	return nil
+}
+
+func (s *state3) AddressMap() (adt.Map, error) {
+	return adt3.AsMap(s.store, s.State.AddressMap, builtin3.DefaultHamtBitwidth)
 }
 
 func (s *state3) GetState() interface{} {

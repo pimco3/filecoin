@@ -21,7 +21,7 @@ func load{{.v}}(store adt.Store, root cid.Cid) (State, error) {
 
 func make{{.v}}(store adt.Store) (State, error) {
 	out := state{{.v}}{store: store}
-	out.State = cron{{.v}}.State{}
+	out.State = *cron{{.v}}.ConstructState(cron{{.v}}.BuiltInEntries())
 	return &out, nil
 }
 

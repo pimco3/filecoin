@@ -24,9 +24,23 @@ func load{{.v}}(store adt.Store, root cid.Cid) (State, error) {
 	return &out, nil
 }
 
-func make{{.v}}(store adt.Store) (State, error) {
+func make{{.v}}(store adt.Store, rootKeyAddress address.Address) (State, error) {
 	out := state{{.v}}{store: store}
-	out.State = verifreg{{.v}}.State{}
+	{{if (le .v 2)}}
+        em, err := adt{{.v}}.MakeEmptyMap(store).Root()
+        if err != nil {
+            return nil, err
+        }
+
+        out.State = *verifreg{{.v}}.ConstructState(em, rootKeyAddress)
+    {{else}}
+    	s, err := verifreg{{.v}}.ConstructState(store, rootKeyAddress)
+    	if err != nil {
+    		return nil, err
+    	}
+
+    	out.State = *s
+    {{end}}
 	return &out, nil
 }
 

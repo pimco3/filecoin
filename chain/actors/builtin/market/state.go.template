@@ -28,8 +28,27 @@ func load{{.v}}(store adt.Store, root cid.Cid) (State, error) {
 
 func make{{.v}}(store adt.Store) (State, error) {
 	out := state{{.v}}{store: store}
-	out.State = market{{.v}}.State{}
-	return &out, nil
+	{{if (le .v 2)}}
+        ea, err := adt{{.v}}.MakeEmptyArray(store).Root()
+        if err != nil {
+            return nil, err
+        }
+
+        em, err := adt{{.v}}.MakeEmptyMap(store).Root()
+        if err != nil {
+            return nil, err
+        }
+
+        out.State = *market{{.v}}.ConstructState(ea, em, em)
+    {{else}}
+    	s, err := market{{.v}}.ConstructState(store)
+    	if err != nil {
+    		return nil, err
+    	}
+
+    	out.State = *s
+    {{end}}
+    return &out, nil
 }
 
 type state{{.v}} struct {

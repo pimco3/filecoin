@@ -14,7 +14,6 @@ import (
 	"github.com/filecoin-project/go-address"
 	"github.com/filecoin-project/go-state-types/abi"
 	"github.com/filecoin-project/go-state-types/network"
-	"github.com/filecoin-project/lotus/chain/actors"
 	init_ "github.com/filecoin-project/lotus/chain/actors/builtin/init"
 	cbg "github.com/whyrusleeping/cbor-gen"
 
@@ -143,23 +142,17 @@ func (ss *stateSnaps) deleteActor(addr address.Address) {
 // VersionForNetwork returns the state tree version for the given network
 // version.
 func VersionForNetwork(ver network.Version) (types.StateTreeVersion, error) {
-	return VersionForActors(actors.VersionForNetwork(ver))
-}
-
-// VersionForActors returns the state tree version for the given actors
-// version.
-func VersionForActors(ver actors.Version) (types.StateTreeVersion, error) {
 	switch ver {
-	case actors.Version0:
+	case network.Version0, network.Version1, network.Version2, network.Version3:
 		return types.StateTreeVersion0, nil
-	case actors.Version2:
+	case network.Version4, network.Version5, network.Version6, network.Version7, network.Version8, network.Version9:
 		return types.StateTreeVersion1, nil
-	case actors.Version3:
+	case network.Version10, network.Version11:
 		return types.StateTreeVersion2, nil
-	case actors.Version4:
+	case network.Version12:
 		return types.StateTreeVersion3, nil
 	default:
-		return types.StateTreeVersion0, xerrors.Errorf("unknown actors version: %s", ver)
+		panic(fmt.Sprintf("unsupported network version %d", ver))
 	}
 }
 

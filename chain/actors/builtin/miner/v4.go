@@ -248,6 +248,10 @@ func (s *state4) IsAllocated(num abi.SectorNumber) (bool, error) {
 	return allocatedSectors.IsSet(uint64(num))
 }
 
+func (s *state4) GetProvingPeriodStart() (abi.ChainEpoch, error) {
+	return s.State.ProvingPeriodStart, nil
+}
+
 func (s *state4) LoadDeadline(idx uint64) (Deadline, error) {
 	dls, err := s.State.LoadDeadlines(s.store)
 	if err != nil {
