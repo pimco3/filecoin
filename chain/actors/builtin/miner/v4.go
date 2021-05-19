@@ -368,6 +368,43 @@ func (s *state4) decodeSectorPreCommitOnChainInfo(val *cbg.Deferred) (SectorPreC
 	return fromV4SectorPreCommitOnChainInfo(sp), nil
 }
 
+func (s *state4) EraseAllUnproven() error {
+
+	dls, err := s.State.LoadDeadlines(s.store)
+	if err != nil {
+		return err
+	}
+
+	err = dls.ForEach(s.store, func(dindx uint64, dl *miner4.Deadline) error {
+		ps, err := dl.PartitionsArray(s.store)
+		if err != nil {
+			return err
+		}
+
+		var part miner4.Partition
+		err = ps.ForEach(&part, func(pindx int64) error {
+			_ = part.ActivateUnproven()
+			err = ps.Set(uint64(pindx), &part)
+			return nil
+		})
+
+		if err != nil {
+			return err
+		}
+
+		dl.Partitions, err = ps.Root()
+		if err != nil {
+			return err
+		}
+
+		return dls.UpdateDeadline(s.store, dindx, dl)
+	})
+
+	return s.State.SaveDeadlines(s.store, dls)
+
+	return nil
+}
+
 func (d *deadline4) LoadPartition(idx uint64) (Partition, error) {
 	p, err := d.Deadline.LoadPartition(d.store, idx)
 	if err != nil {

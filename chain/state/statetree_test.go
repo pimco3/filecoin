@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/filecoin-project/go-state-types/network"
+
 	"github.com/ipfs/go-cid"
 	cbor "github.com/ipfs/go-ipld-cbor"
 
@@ -362,7 +364,7 @@ func TestStateTreeConsistency(t *testing.T) {
 
 	// TODO: ActorUpgrade: this test tests pre actors v2
 
-	sv, err := VersionForNetwork(build.NewestNetworkVersion)
+	sv, err := VersionForNetwork(network.Version3)
 	if err != nil {
 		t.Fatal(err)
 	}

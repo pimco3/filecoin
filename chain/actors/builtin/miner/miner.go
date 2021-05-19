@@ -147,6 +147,8 @@ type State interface {
 
 	// Note that ProvingPeriodStart is deprecated and will be renamed / removed in a future version of actors
 	GetProvingPeriodStart() (abi.ChainEpoch, error)
+	// Testing only
+	EraseAllUnproven() error
 
 	LoadDeadline(idx uint64) (Deadline, error)
 	ForEachDeadline(cb func(idx uint64, dl Deadline) error) error

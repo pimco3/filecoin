@@ -412,6 +412,36 @@ func SetupStorageMiners(ctx context.Context, cs *store.ChainStore, sroot cid.Cid
 					if err != nil {
 						return cid.Undef, xerrors.Errorf("failed to confirm presealed sectors: %w", err)
 					}
+
+					_, err = vm.Flush(ctx)
+					if err != nil {
+						return cid.Undef, xerrors.Errorf("flushing vm: %w", err)
+					}
+
+					mact, err := vm.StateTree().GetActor(minerInfos[i].maddr)
+					if err != nil {
+						return cid.Undef, xerrors.Errorf("getting miner actor: %w", err)
+					}
+
+					mst, err := miner.Load(adt.WrapStore(ctx, cst), mact)
+					if err != nil {
+						return cid.Undef, xerrors.Errorf("getting miner state: %w", err)
+					}
+
+					if err = mst.EraseAllUnproven(); err != nil {
+						return cid.Undef, xerrors.Errorf("failed to erase unproven sectors: %w", err)
+					}
+
+					mcid, err := cst.Put(ctx, mst.GetState())
+					if err != nil {
+						return cid.Undef, xerrors.Errorf("putting miner state: %w", err)
+					}
+
+					mact.Head = mcid
+
+					if err = vm.StateTree().SetActor(minerInfos[i].maddr, mact); err != nil {
+						return cid.Undef, xerrors.Errorf("setting miner state: %w", err)
+					}
 				}
 			}
 		}
